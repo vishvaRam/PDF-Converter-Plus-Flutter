@@ -9,10 +9,10 @@ final Color okBtn = Color(0xffE0F2FE);
 
 // ignore: must_be_immutable
 class PDFViewer extends StatefulWidget {
-  String path, fileName;
+  String path, fileName,currentPage;
   List<String> paths = List<String>();
 
-  PDFViewer({this.path, this.fileName}) {
+  PDFViewer({this.path, this.fileName,this.currentPage}) {
     paths.add(path);
   }
 
@@ -43,8 +43,12 @@ class _PDFViewerState extends State<PDFViewer> {
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
+              if(widget.currentPage == "HomePage"){
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => HomePage()));
+              }else{
+                Navigator.pop(context);
+              }
             }),
         actions: [
           FlatButton.icon(

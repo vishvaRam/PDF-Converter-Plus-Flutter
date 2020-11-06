@@ -9,12 +9,13 @@ class PdfConvertor extends StatefulWidget {
 }
 
 class _PdfConvertorState extends State<PdfConvertor> {
+  String currentPage = "";
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(brightness: Brightness.dark),
-      home: HomePage(),
+      home: HomePage(currentPage: currentPage,),
     );
   }
 }

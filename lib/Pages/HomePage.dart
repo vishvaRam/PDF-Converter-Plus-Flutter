@@ -11,11 +11,14 @@ import 'Files.dart';
 final Color okBtn = Color(0xffE0F2FE);
 
 class HomePage extends StatefulWidget {
+  String currentPage;
+  HomePage({this.currentPage});
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
   final pdf = pw.Document();
   List<Asset> images = List<Asset>();
   List<File> files = List<File>();
@@ -188,19 +191,23 @@ class _HomePageState extends State<HomePage> {
         print("Done" + value.toString());
         setState(() {
           isLoading = false;
+          widget.currentPage = "HomePage";
         });
+        print("From : "+widget.currentPage);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => PDFViewer(
                       path: path,
                       fileName: fileName,
+                      currentPage: widget.currentPage,
                     )));
         setState(() {
           images = [];
           files = [];
         });
       });
+
     } catch (e) {
       print(e);
       setState(() {
@@ -212,6 +219,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget appBar() {
     return AppBar(
+       automaticallyImplyLeading: false,
       centerTitle: false,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -231,7 +239,7 @@ class _HomePageState extends State<HomePage> {
       ),
       actions: [
         IconButton(icon: Icon(Icons.save_sharp), onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => SavedPDF(dir: dirPath,),));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => SavedPDF(dir: dirPath,currentPage: widget.currentPage,),));
         })
       ],
     );
