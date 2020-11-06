@@ -18,14 +18,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   final pdf = pw.Document();
   List<Asset> images = List<Asset>();
   List<File> files = List<File>();
   bool isLoading = false;
   bool pathIstrue = false;
   String dirPath = "/storage/emulated/0/PDF Converter Plus";
-
 
   snakBar(BuildContext context, String text) {
     final snackBar = SnackBar(content: Text(text));
@@ -45,89 +43,99 @@ class _HomePageState extends State<HomePage> {
           child: Icon(Icons.add),
           elevation: 10.0,
         ),
-        images.length == 0? Container(): SizedBox(
-          height: 15.0,
-        ),
-        images.length == 0? Container(): FloatingActionButton.extended(
-          heroTag: null,
-          onPressed: () async {
-            final _text = TextEditingController();
+        images.length == 0
+            ? Container()
+            : SizedBox(
+                height: 15.0,
+              ),
+        images.length == 0
+            ? Container()
+            : FloatingActionButton.extended(
+                heroTag: null,
+                onPressed: () async {
+                  final _text = TextEditingController();
 
-            if (images.length == 0) {
-              snakBar(context, "No images selected!");
-              return;
-            }
+                  if (images.length == 0) {
+                    snakBar(context, "No images selected!");
+                    return;
+                  }
 
-            final Directory docDir = Directory(dirPath);
-            String path ="";
-            try{
-              if(await docDir.exists()){
-                print("Dir already exist");
-                path = docDir.path;
-              }else{
-                final Directory newdocDir = await docDir.create(recursive: true);
-                path = newdocDir.path;
-                print("Created new Dir");
-              }
+                  final Directory docDir = Directory(dirPath);
+                  String path = "";
+                  try {
+                    if (await docDir.exists()) {
+                      print("Dir already exist");
+                      path = docDir.path;
+                    } else {
+                      final Directory newdocDir =
+                          await docDir.create(recursive: true);
+                      path = newdocDir.path;
+                      print("Created new Dir");
+                    }
+                  } catch (e) {
+                    print(e);
+                    setState(() {
+                      isLoading = false;
+                    });
+                  }
+                  String tempString;
 
-            }catch(e){print(e);setState(() {
-              isLoading=false;
-            });}
-            String tempString;
-
-            showDialog(
-                context: context,
-                child: AlertDialog(
-                  title: Text("File name"),
-                  content: StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState) =>
-                        Container(
-                      child: TextField(
-                        controller: _text,
-                        autofocus: true,
-                        decoration: InputDecoration(
-                          hintText: "Enter file name",
-                          errorText: pathIstrue ? "File already exist!" : null,
-                        ),
-                        onChanged: (value) async {
-                          tempString = path + "/$value.pdf";
-                          File(tempString).existsSync()
-                              ? setState(() {
-                                  pathIstrue = true;
-                                })
-                              : setState(() {
-                                  pathIstrue = false;
-                                });
-                          print(tempString);
-                          print(pathIstrue);
-                        },
-                      ),
-                    ),
-                  ),
-                  actions: [
-                    OutlineButton.icon(
-                        borderSide: BorderSide(width: 1, color: Colors.white38),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(Icons.clear),
-                        label: Text(
-                          "Close",
-                          style: TextStyle(fontSize: 18.0),
-                        )),
-                    isLoading
-                        ? Container(
-                            child: Center(
-                              child: CircularProgressIndicator(),
+                  showDialog(
+                      context: context,
+                      child: AlertDialog(
+                        title: Text("File name"),
+                        content: StatefulBuilder(
+                          builder:
+                              (BuildContext context, StateSetter setState) =>
+                                  Container(
+                            child: TextField(
+                              controller: _text,
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                hintText: "Enter file name",
+                                errorText:
+                                    pathIstrue ? "File already exist!" : null,
+                              ),
+                              onChanged: (value) async {
+                                tempString = path + "/$value.pdf";
+                                File(tempString).existsSync()
+                                    ? setState(() {
+                                        pathIstrue = true;
+                                      })
+                                    : setState(() {
+                                        pathIstrue = false;
+                                      });
+                                print(tempString);
+                                print(pathIstrue);
+                              },
                             ),
-                          )
-                        : FlatButton.icon(
-
+                          ),
+                        ),
+                        actions: [
+                          OutlineButton.icon(
+                              borderSide:
+                                  BorderSide(width: 1, color: Colors.white38),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: Icon(Icons.clear),
+                              label: Text(
+                                "Close",
+                                style: TextStyle(fontSize: 18.0),
+                              )),
+                          FlatButton.icon(
                             onPressed: () {
                               if (_text.text != "") {
                                 if (pathIstrue == false) {
-                                  pdfConvertion(
-                                      context, tempString, _text.text);
+                                  try {
+                                    pdfConvertion(
+                                        context, tempString, _text.text);
+                                  } catch (e) {
+                                    print(e);
+                                    setState(() {
+                                      isLoading =false;
+                                    });
+                                  }
                                   Navigator.pop(context);
                                 }
                               }
@@ -143,16 +151,18 @@ class _HomePageState extends State<HomePage> {
                             ),
                             color: okBtn,
                           ),
-                  ],
-                ));
-          },
-          label: Text("Create PDF"),
-          icon: Icon(Icons.create),
-          elevation: 10.0,
-        ),
-        images.length == 0? Container():  SizedBox(
-          height: 10.0,
-        )
+                        ],
+                      ));
+                },
+                label: Text("Create PDF"),
+                icon: Icon(Icons.create),
+                elevation: 10.0,
+              ),
+        images.length == 0
+            ? Container()
+            : SizedBox(
+                height: 10.0,
+              )
       ],
     );
   }
@@ -193,7 +203,7 @@ class _HomePageState extends State<HomePage> {
           isLoading = false;
           widget.currentPage = "HomePage";
         });
-        print("From : "+widget.currentPage);
+        print("From : " + widget.currentPage);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -207,7 +217,6 @@ class _HomePageState extends State<HomePage> {
           files = [];
         });
       });
-
     } catch (e) {
       print(e);
       setState(() {
@@ -219,7 +228,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget appBar() {
     return AppBar(
-       automaticallyImplyLeading: false,
+      automaticallyImplyLeading: false,
       centerTitle: false,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -238,9 +247,18 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       actions: [
-        IconButton(icon: Icon(Icons.save_sharp), onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => SavedPDF(dir: dirPath,currentPage: widget.currentPage,),));
-        })
+        IconButton(
+            icon: Icon(Icons.save_sharp,size: 26.0,),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SavedPDF(
+                      dir: dirPath,
+                      currentPage: widget.currentPage,
+                    ),
+                  ));
+            })
       ],
     );
   }
