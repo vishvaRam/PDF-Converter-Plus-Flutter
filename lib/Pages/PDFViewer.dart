@@ -51,17 +51,13 @@ class _PDFViewerState extends State<PDFViewer> {
               }
             }),
         actions: [
-          FlatButton.icon(
-            label: Text("Share",style: TextStyle(fontSize: 20),),
-            icon: Icon(Icons.share,size: 20,),
-            onPressed: () {
-              try {
-                Share.shareFiles(widget.paths);
-              } catch (e) {
-                print(e);
-              }
-            },
-          )
+         IconButton(icon: Icon(Icons.share), onPressed: () {
+           try {
+             Share.shareFiles(widget.paths);
+           } catch (e) {
+             print(e);
+           }
+         })
         ],
       ),
     );

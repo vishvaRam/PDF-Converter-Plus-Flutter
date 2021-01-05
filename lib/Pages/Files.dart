@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:pdfconverter/Pages/PDFViewer.dart';
 import 'package:filesize/filesize.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:share/share.dart';
 
 class SavedPDF extends StatefulWidget {
@@ -52,15 +54,20 @@ class _SavedPDFState extends State<SavedPDF> {
         title: Text("Saved PDF"),
       ),
       body: file.length == 0
-          ? Container(
-              child: Center(
-                child: Text(
-                  "Empty",
-                  style: TextStyle(fontSize: 20.0, color: Colors.white70),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            )
+          ?  Padding(
+            padding: const EdgeInsets.symmetric(vertical:8.0,horizontal: 20.0),
+            child: Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(child: SvgPicture.asset("Assets/empty.svg",placeholderBuilder: (BuildContext context) => Container(
+                  padding: const EdgeInsets.all(30.0),
+                  child: const CircularProgressIndicator()))),
+              Flexible(child: Text("You haven't saved any PDF file.",style: TextStyle(fontSize: 16.0,color:Theme.of(context).accentColor, ),))
+            ],
+        ),
+      ),
+          )
           : ListView.separated(
               itemCount: file.length,
               itemBuilder: (BuildContext context, int index) {

@@ -7,6 +7,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'PDFViewer.dart';
 import 'package:pdf/widgets.dart' as pdfWidget;
 import 'Files.dart';
+import 'package:share/share.dart';
 
 final Color okBtn = Color(0xffE0F2FE);
 
@@ -238,7 +239,7 @@ class _HomePageState extends State<HomePage> {
             height: 35.0,
           ),
           SizedBox(
-            width: 18.0,
+            width: 8,
           ),
           Text(
             "PDF Converter Plus",
@@ -247,6 +248,15 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       actions: [
+        IconButton(
+            icon: Icon(Icons.share,size: 26.0,),
+            onPressed: () {
+             try{
+               Share.share("https://play.google.com/store/apps/details?id=com.vishva.pdf.converter.plus",subject: "PDF Converter Plus");
+             }catch(e){
+               print(e);
+             }
+            }),
         IconButton(
             icon: Icon(Icons.save_sharp,size: 26.0,),
             onPressed: () {
@@ -258,7 +268,8 @@ class _HomePageState extends State<HomePage> {
                       currentPage: widget.currentPage,
                     ),
                   ));
-            })
+            }),
+        SizedBox(width: 5.0,)
       ],
     );
   }
