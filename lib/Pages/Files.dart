@@ -60,7 +60,8 @@ class _SavedPDFState extends State<SavedPDF> {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Flexible(child: SvgPicture.asset("Assets/empty.svg",placeholderBuilder: (BuildContext context) => Container(
+              Flexible(
+                  child: SvgPicture.asset("Assets/empty.svg",placeholderBuilder: (BuildContext context) => Container(
                   padding: const EdgeInsets.all(30.0),
                   child: const CircularProgressIndicator()))),
               Flexible(child: Text("You haven't saved any PDF file.",style: TextStyle(fontSize: 16.0,color:Theme.of(context).accentColor, ),))
