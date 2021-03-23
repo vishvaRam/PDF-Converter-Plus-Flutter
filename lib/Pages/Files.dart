@@ -22,9 +22,11 @@ class _SavedPDFState extends State<SavedPDF> {
     try {
       Directory dirPath = Directory(widget.dir);
       if (await dirPath.exists()) {
+        var temp = Directory(widget.dir)
+            .listSync();
         setState(() {
-          file = Directory(widget.dir)
-              .listSync(); //use your folder name insted of resume.
+          file = temp.reversed.toList();
+          //use your folder name insted of resume.
         });
       } else {
         setState(() {

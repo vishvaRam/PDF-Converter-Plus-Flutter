@@ -19,7 +19,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final pdf = pw.Document();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+
+  var pdf = pw.Document();
   List<Asset> images = List<Asset>();
   List<File> files = List<File>();
   bool isLoading = false;
@@ -82,8 +86,8 @@ class _HomePageState extends State<HomePage> {
                   String tempString;
 
                   showDialog(
-                      context: context,
-                      child: AlertDialog(
+                      context: _scaffoldKey.currentContext,
+                      builder:(context)=> AlertDialog(
                         title: Text("File name"),
                         content: StatefulBuilder(
                           builder:
@@ -205,18 +209,22 @@ class _HomePageState extends State<HomePage> {
           widget.currentPage = "HomePage";
         });
         print("From : " + widget.currentPage);
-        Navigator.pushReplacement(
-            context,
+        setState(() {
+          images = [];
+          files = [];
+          pdf = null;
+        });
+        Navigator.push(
+            _scaffoldKey.currentContext,
             MaterialPageRoute(
                 builder: (context) => PDFViewer(
                       path: path,
                       fileName: fileName,
                       currentPage: widget.currentPage,
                     )));
-        setState(() {
-          images = [];
-          files = [];
-        });
+        if(pdf == null){
+          pdf = pw.Document();
+        }
       });
     } catch (e) {
       print(e);
@@ -338,6 +346,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     print("disposed!");
+    pdf = null;
     super.dispose();
   }
 
@@ -345,6 +354,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
           appBar: appBar(),
           floatingActionButton:
               Builder(builder: (context) => floatingActionBtn(context)),
